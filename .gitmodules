@@ -1,0 +1,3 @@
+[submodule "pkasolver"]
+	path = pkasolver
+	url = https://github.com/mayrf/pkasolver.git

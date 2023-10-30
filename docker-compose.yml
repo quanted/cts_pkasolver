@@ -1,0 +1,9 @@
+version: "3.1"
+
+services:
+
+  pkasolver:
+    image: pkasolver:ubuntu4
+    container_name: pkasolver
+    volumes:
+      - ./:/src
