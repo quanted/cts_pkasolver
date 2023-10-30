@@ -16,6 +16,9 @@ ENV PATH /opt/mamba/bin:$PATH
 
 COPY . /src
 
+RUN ls /src && \
+	ls /src/pkasolver
+
 RUN chmod 755 /src/start_flask.sh
 
 COPY uwsgi.ini /etc/uwsgi/uwsgi.ini
