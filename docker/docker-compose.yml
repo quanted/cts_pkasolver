@@ -1,0 +1,11 @@
+version: "3.1"
+
+services:
+
+  cts-pkasolver:
+    image: cts-pkasolver:1
+    container_name: cts-pkasolver
+    # volumes:
+    #   - ./:/src
+    ports:
+      - "8181:8080"

@@ -1,6 +1,5 @@
 import pandas as pd
 from rdkit import Chem
-import torch
 from os import path
 import pkasolver
 from pkasolver.query import calculate_microstate_pka_values
@@ -16,16 +15,16 @@ class CTSPkasolver:
 	"""
 
 	def __init__(self):
-		self.pka_dec= 2.0 
+		self.pka_dec= 2
 		self.step=0.2  # step size for charts
 		self.minph=0
 		self.maxph=14
 
-	def run_pka_solver(smiles):
+	def run_pka_solver(self, smiles):
 		"""
 		Generator function that returns pKa values and more.
 		"""
-		mol=Chem.MolFromSmiles(x)  # creates mol object from smiles
+		mol=Chem.MolFromSmiles(smiles)  # creates mol object from smiles
 		protonation_states = calculate_microstate_pka_values(mol) # performs internal calculations and stores as object
 		sites=len(protonation_states) # gets the number of ionization sites 
 		
@@ -41,7 +40,7 @@ class CTSPkasolver:
 
 		yield sites, lst, proSmi, depSmi
 
-	def get_mono_plot(pka_list, proSmi, depSmi):
+	def get_mono_plot(self, pka_list, proSmi, depSmi):
 		pka = pka_list[0]
 		x = []
 		a0 = []
@@ -70,7 +69,7 @@ class CTSPkasolver:
 
 		return chart_data, microspecies
 
-	def get_di_plot(pka_list, proSmi, depSmi):
+	def get_di_plot(self, pka_list, proSmi, depSmi):
 		pka1 = pka_list[0]
 		pka2 = pka_list[1]
 		
@@ -110,7 +109,7 @@ class CTSPkasolver:
 
 		return chart_data, microspecies
 
-	def get_tri_plot(pka_list, proSmi, depSmi):
+	def get_tri_plot(self, pka_list, proSmi, depSmi):
 		pka1 = pka_list[0]
 		pka2 = pka_list[1]
 		pka3 = pka_list[2]
@@ -153,7 +152,7 @@ class CTSPkasolver:
 
 		return chart_data, microspecies
 
-	def get_multi_plot(pka_sites, pka_list, proSmi, depSmi):
+	def get_multi_plot(self, pka_sites, pka_list, proSmi, depSmi):
 		df = pd.DataFrame()
 		x = []
 		a0 = []
@@ -222,7 +221,7 @@ class CTSPkasolver:
 
 		return plt, microspecies
 
-	def main(parent, data_type=None):
+	def main(self, parent, data_type=None):
 		"""
 		Main function for returning pkas and/or microspecies chart data.
 		Examples: ['CC(O)=O','CC(C)C(N)C(O)=O','C(O)1=CC=C(N)C=C1','NC(CCS)C(O)=O','NC(CC1=CN=CN1)C(O)=O']
@@ -256,4 +255,4 @@ class CTSPkasolver:
 
 		print("~~~ chart_data: {}\nspecies: {}")
 
-		return chart_data, species
+		return chart_data, species, pka_list

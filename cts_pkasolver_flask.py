@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file, make_response, send_from_directory, g, Response
 import logging
 import json
+import time
 
 from cts_pkasolver import CTSPkasolver
 
@@ -19,7 +20,7 @@ logger.info("API wrapper for pkasolver.")
 def status_check():
     return "pkasolver running.", 200
 
-@app.route('/pkasolver/data/')
+@app.route('/pkasolver/data')
 def get_data():
     """
     Returns pka data from pkasolver library.
@@ -36,23 +37,25 @@ def get_data():
     else:
         return "Missing required pkasolver parater 'smiles'", 400
     
-    if "data_type" in args:
-        data_type = args["data_type"]
+    try:
+        chart_data, species, pka_list = pkasolver.main(smiles)
 
-    # try:
-    chart_data, species = pkasolver.main(smiles, data_type)
-    # except Exception as e:
-    #     logging.error("pkasolver_flask exception: {}".format(e))
-    #     return "pkasolver internal error", 500
+        results = {
+            "status": True,
+            "chart_data": chart_data,
+            "species": species,
+            "pka_list": pka_list
+        }
+    except Exception as e:
+        logging.error("pkasolver_flask exception: {}".format(e))
+        return "pkasolver internal error", 500
+
 
     # TODO: Format data for CTS here, or add formatting code on CTS backend?
     # ^^^ Consider what would make sense for implementing future calcs and having
     # to modify the data structure for CTS.
 
-    results = {
-        "chart_data": chart_data,
-        "species": species
-    }
+    
 
     return results, 200
 

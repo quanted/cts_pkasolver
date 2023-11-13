@@ -16,16 +16,19 @@ ENV PATH /opt/mamba/bin:$PATH
 
 COPY . /src
 
-RUN chmod 755 /src/start_flask.sh
+RUN chmod 755 /src/docker/flask/start_flask.sh
 
-COPY uwsgi.ini /etc/uwsgi/uwsgi.ini
+COPY docker/flask/uwsgi.ini /etc/uwsgi/uwsgi.ini
 
 RUN /opt/mamba/bin/mamba init
 
 RUN mamba env create -f /src/pkasolver/devtools/conda-envs/test_env.yaml
 
-RUN conda run --no-capture-output -n pka_prediction python /src/pkasolver/setup.py install
+RUN mamba env update -n pka_prediction --file /src/environment.yml
 
-RUN conda run --no-capture-output -n pka_prediction pip install -r /src/requirements.txt
+RUN cd /src/pkasolver && \
+	conda run --no-capture-output -n pka_prediction python setup.py install
 
-CMD ["sh", "start_flask.sh"]
+WORKDIR /src
+
+CMD ["sh", "/src/docker/flask/start_flask.sh"]

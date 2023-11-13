@@ -1,0 +1,8 @@
+name: pka_prediction
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - flask
+  - requests
+  - uwsgi
