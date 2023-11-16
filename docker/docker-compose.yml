@@ -11,10 +11,7 @@ services:
       - "8080"
 
   cts-pkasolver-nginx:
-    image: cts-pkasolver-nginx
-    build:
-      context: ../
-      dockerfile: ./docker/nginx/Dockerfile
+    image: ghcr.io/quanted/cts-pkasolver-nginx:main-8a82104cbfd3bf39f07cb51085997973b624fdf6
     container_name: cts-pkasolver-nginx
     ports:
       - "8181:80"

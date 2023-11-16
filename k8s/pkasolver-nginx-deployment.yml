@@ -18,7 +18,7 @@ spec:
         app: cts-pkasolver-nginx
     spec:
       containers:
-        - image: ghcr.io/quanted/cts-pkasolver-nginx:main-8f857676cec6ad3e3cdb0dbfaab9c3cf3495e489
+        - image: ghcr.io/quanted/cts-pkasolver-nginx:main-8a82104cbfd3bf39f07cb51085997973b624fdf6
           imagePullPolicy: Always
           name: cts-pkasolver-nginx
           readinessProbe:
@@ -41,11 +41,4 @@ spec:
           ports:
             - containerPort: 443
             - containerPort: 80
-          volumeMounts:
-            - mountPath: /src/collected_static
-              name: cts-collected-static
       restartPolicy: Always
-      volumes:
-      - name: cts-collected-static
-        persistentVolumeClaim:
-          claimName: cts-collected-static-pvc
