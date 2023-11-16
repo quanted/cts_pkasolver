@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cts-nginx
+  name: cts-pkasolver-nginx
   namespace: qed-kube-dev
 spec:
   type: NodePort
   # type: ClusterIP
   selector:
-    app: cts-nginx
+    app: cts-pkasolver-nginx
   ports:
     - protocol: TCP
       port: 80
