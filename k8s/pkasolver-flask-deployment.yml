@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: pkasolver-flask
-  name: pkasolver-flask
+    app: cts-pkasolver
+  name: cts-pkasolver
   namespace: qed-kube-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pkasolver-flask
+      app: cts-pkasolver
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: pkasolver-flask
+        app: cts-pkasolver
     spec:
       containers:
-      - name: pkasolver-flask
+      - name: cts-pkasolver
         image: ghcr.io/quanted/cts-pkasolver:main-9cfd6fd67e6de631772d580fc671e69573ba2526
         imagePullPolicy: Never
         livenessProbe:
