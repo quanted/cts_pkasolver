@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: pkasolver-flask
+  name: pkasolver-flask
+  namespace: qed-kube-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pkasolver-flask
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pkasolver-flask
+    spec:
+      containers:
+      - name: pkasolver-flask
+        image: ghcr.io/quanted/cts-pkasolver:main-9cfd6fd67e6de631772d580fc671e69573ba2526
+        imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+              - ls
+              - /
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+              - ls
+              - /
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 10
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler

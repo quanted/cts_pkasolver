@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cts-nginx
+  name: cts-nginx
+  namespace: qed-kube-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cts-nginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cts-nginx
+    spec:
+      containers:
+        - image: ghcr.io/quanted/cts-nginx:dev-kube
+          imagePullPolicy: Always
+          name: cts-nginx
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "250m"
+          #   limits:
+          #     memory: "500Mi"
+          #     cpu: "500m"
+          ports:
+            - containerPort: 443
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /src/collected_static
+              name: cts-collected-static
+      restartPolicy: Always
+      volumes:
+      - name: cts-collected-static
+        persistentVolumeClaim:
+          claimName: cts-collected-static-pvc
