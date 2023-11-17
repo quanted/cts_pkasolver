@@ -1,7 +1,9 @@
-FROM ubuntu:latest
+# FROM ubuntu:latest
+FROM ubuntu:mantic
 
 # TODO: More build libraries needed (see cyan-waterbody)?
 RUN apt-get update && \
+	apt-get upgrade -y && \
 	apt-get install -y \
 		wget \
 		gcc \
