@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 from rdkit import Chem
 from os import path
@@ -19,6 +20,38 @@ class CTSPkasolver:
 		self.step=0.2  # step size for charts
 		self.minph=0
 		self.maxph=14
+
+	def format_chart_data(self, chart_data):
+		"""
+		Formats cts-pkasolver chart_data into something the
+		speciation output page is expecting.
+
+		Reformats this:
+		{
+			"x": x,
+			"a0": a0,
+			"a1": a1,
+			"a2": a2,
+			"a3": a3
+		}
+		Into this:
+		{
+			"microspecies1": [[x[0], a0[0]], [x[1], a0[1]], ...],
+			"microspecies2": [[x[0], a1[0]], ...] 
+		}
+
+		"""
+		results_obj = {}
+		# chart_data = results_obj.get("chart_data", {})
+
+		for key in chart_data:
+			if key != "x":
+				result = [[chart_data["x"][i], chart_data[key][i]] for i in range(len(chart_data[key]))]
+				new_key = "microspecies{}".format(int(key[1]) + 1)
+				results_obj[new_key] = result
+
+
+		return results_obj
 
 	def run_pka_solver(self, smiles):
 		"""
@@ -60,6 +93,7 @@ class CTSPkasolver:
 			"a0": a0,
 			"a1": a1
 		}
+
 		
 		# Makes a list of smiles in order 
 		smiles=[proSmi[0]]+depSmi
@@ -92,7 +126,6 @@ class CTSPkasolver:
 			a1.append(round(((1*ka1)/E),self.pka_dec))
 			a2.append(round(((ka1*ka2)/E),self.pka_dec))
 
-		print("x: {}\na0: {}\na1: {}\na2: {}".format(x, a0, a1, a2))
 
 		chart_data = {
 			"x": x,
@@ -210,7 +243,6 @@ class CTSPkasolver:
 		# Makes a dictionary where the keys are the a_index (ex.0= a0, 1=a1, etc.) and values are the microspecies smiles strings
 		microspecies = dict(list(enumerate(smiles)))
 		
-		print("GetMultiPlot data: {}".format(data))
 
 		# Plot
 		for i in data.columns[2:]:
@@ -253,6 +285,6 @@ class CTSPkasolver:
 		elif pkaSites > 3:
 			chart_data, species = self.get_multi_plot(n, p, pro, dep)
 
-		print("~~~ chart_data: {}\nspecies: {}")
+		reformatted_chart_data = self.format_chart_data(chart_data)
 
-		return chart_data, species, pka_list
+		return reformatted_chart_data, species, pka_list
