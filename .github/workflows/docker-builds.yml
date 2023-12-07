@@ -1,7 +1,15 @@
 
 name: Create and publish a Docker image
 
-on: push
+on:
+  push:
+    branches:
+    paths-ignore:
+      - 'k8s/**'
+  pull_request:
+    types: [opened, reopened]
+    paths-ignore:
+      - 'k8s/**'
 
 env:
   REGISTRY: ghcr.io
