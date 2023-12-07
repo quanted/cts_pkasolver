@@ -8,8 +8,6 @@ on:
       - 'k8s/**'
   pull_request:
     types: [opened, reopened]
-    paths-ignore:
-      - 'k8s/**'
 
 env:
   REGISTRY: ghcr.io
