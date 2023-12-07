@@ -46,7 +46,7 @@ class CTSPkasolver:
 
 		for key in chart_data:
 			if key != "x":
-				result = [[chart_data["x"][i], chart_data[key][i]] for i in range(len(chart_data[key]))]
+				result = [[chart_data["x"][i], (100.0 * chart_data[key][i])] for i in range(len(chart_data[key]))]
 				new_key = "microspecies{}".format(int(key[1]) + 1)
 				results_obj[new_key] = result
 
