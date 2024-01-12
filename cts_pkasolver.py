@@ -200,8 +200,8 @@ class CTSPkasolver:
 			D = 1
 			numTerms=[]
 			for i in range(0,(pka_sites-1)):
-				n1 = 10**(ph-pka_lst[i])
-				n2 = 10**(ph-pka_lst[1+i])
+				n1 = 10**(ph-pka_list[i])
+				n2 = 10**(ph-pka_list[1+i])
 				#if there is only one term, return D+n1 (should not happend)
 				if pka_sites == 1:
 					D += n1
@@ -216,11 +216,11 @@ class CTSPkasolver:
 						nth = n1 *n2
 						#update values
 						n1 = nth
-						n2 = 10**(ph-pka_lst[i+2])
+						n2 = 10**(ph-pka_list[i+2])
 						count += 1
 
 			# Calculates ionization fraction for each numTerm
-			a0.append(round(((1**2)/D), self.pka_dec))
+			# a0.append(round(((1**2)/D), self.pka_dec))
 			a = []
 			for t in numTerms:
 				a.append(round((t/D), self.pka_dec))
@@ -228,9 +228,8 @@ class CTSPkasolver:
 		   
 		df['pH'] = x
 		df['ax'] = ax
-		df['a0'] = a0
-		
-		
+		# df['a0'] = a0
+
 		# Separate out ionization fractions into their own columns (based on ka)
 		points = pd.DataFrame(df.ax.tolist()).add_prefix('a')
 		
@@ -242,16 +241,16 @@ class CTSPkasolver:
 		
 		# Makes a dictionary where the keys are the a_index (ex.0= a0, 1=a1, etc.) and values are the microspecies smiles strings
 		microspecies = dict(list(enumerate(smiles)))
-		
 
-		# Plot
+		chart_data = {}
+
+		# Creates chart data for speciation workflow:
 		for i in data.columns[2:]:
-			x = data['pH']
-			y = data[i]
-			plt.plot(x, y, label=i)
-			plt.legend()
+			chart_data[i] = data[i].tolist()
 
-		return plt, microspecies
+		chart_data['x'] = data['pH'].tolist()
+			
+		return chart_data, microspecies
 
 	def main(self, parent, data_type=None):
 		"""
@@ -277,14 +276,28 @@ class CTSPkasolver:
 		chart_data, species = None, None
 
 		if pkaSites == 1:
+			# print("Calling get_mono_plot.")
 			chart_data, species = self.get_mono_plot(p, pro, dep)
 		elif pkaSites == 2:
+			# print("Calling get_di_plot.")
 			chart_data, species = self.get_di_plot(p, pro, dep)
 		elif pkaSites == 3:
+			# print("Calling get_tri_plot.")
 			chart_data, species = self.get_tri_plot(p, pro, dep)
 		elif pkaSites > 3:
+			# print("Calling get_multi_plot.")
 			chart_data, species = self.get_multi_plot(n, p, pro, dep)
 
 		reformatted_chart_data = self.format_chart_data(chart_data)
 
 		return reformatted_chart_data, species, pka_list
+
+
+if __name__ == "__main__":
+
+
+	# test_smiles = "CC(=O)OC1=CC=CC=C1C(O)=O"
+	test_smiles = "OC(=O)CC(O)(CC(O)=O)C(O)=O"
+
+	cts_pkasolver = CTSPkasolver()
+	cts_pkasolver.main(test_smiles)
