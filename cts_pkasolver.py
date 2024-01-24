@@ -185,7 +185,7 @@ class CTSPkasolver:
 
 		return chart_data, microspecies
 
-	def get_multi_plot(self, pka_sites, pka_list, proSmi, depSmi):
+	def get_multi_plot_orig(self, pka_sites, pka_list, proSmi, depSmi):
 		df = pd.DataFrame()
 		x = []
 		a0 = []
@@ -252,6 +252,85 @@ class CTSPkasolver:
 			
 		return chart_data, microspecies
 
+	def get_multi_plot(self, pka_sites,pka_list,proSmi,depSmi):
+		df=pd.DataFrame()
+		x=[]
+		a0=[]
+		ax=[]
+		
+		ph=self.minph
+		
+		while ph<=self.maxph:
+			ph+=self.step
+			x.append(ph)
+			count=0
+			D=1
+			numTerms=[]
+			for i in range(0,(pka_sites-1)):
+				n1=10**(ph-pka_list[i])
+				n2=10**(ph-pka_list[1+i])
+				#if there is only one term, return D+n1 (should not happend)
+				if pka_sites ==1:
+					D+=n1
+				else:
+					while count < pka_sites:
+						#get the numerator term and save to list
+						N=n1
+						numTerms.append(N)
+						#caluclate denominator
+						D+=n1
+						#calculate next term
+						nth=n1 *n2
+						#update values
+						n1=nth
+						n2=10**(ph-pka_list[i+2])
+						count+=1
+
+			#calculate ionization fraction for each numTerm
+			a0.append(round(((1**2)/D),self.pka_dec))
+			a=[]
+			for t in numTerms:
+				a.append(round((t/D),self.pka_dec))
+			ax.append(a)
+		   
+		df['pH']=x
+		df['ax']=ax
+		df['a0']=a0
+		
+		#make list of column names 
+		col_names=[]
+		for i in range(1,len(df.ax[0])+1):
+			name='a'+str(i)
+			col_names.append(name)
+				
+		#separate out ionization fractions into their own columns (based on ka)
+		points=pd.DataFrame(df.ax.tolist())
+
+		#assign columns appropriate name    
+		points.columns=col_names
+		
+		#combine pka columns with rest of data
+		data=pd.concat([df,points],axis=1)
+	 
+
+		#make a list of smiles in order 
+		smiles=[proSmi[0]]+depSmi
+		#make a dictionary where the keys are the a_index (ex.0= a0, 1=a1, etc.) and values are the microspecies smiles strings
+		microspecies=dict(list(enumerate(smiles)))
+
+		
+		# Creates chart data for speciation workflow:
+		chart_data = {}
+		for i in data.columns[2:]:
+			chart_data[i] = data[i].tolist()
+		chart_data['x'] = data['pH'].tolist()
+		
+		return chart_data, microspecies
+
+
+
+
+
 	def main(self, parent, data_type=None):
 		"""
 		Main function for returning pkas and/or microspecies chart data.
@@ -300,4 +379,4 @@ if __name__ == "__main__":
 	test_smiles = "OC(=O)CC(O)(CC(O)=O)C(O)=O"
 
 	cts_pkasolver = CTSPkasolver()
-	cts_pkasolver.main(test_smiles)
+	chart_data, species, pka_list = cts_pkasolver.main(test_smiles)
