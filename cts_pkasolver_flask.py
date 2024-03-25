@@ -35,7 +35,7 @@ def get_data():
     if "smiles" in args:
         smiles = args["smiles"]
     else:
-        return "Missing required pkasolver parater 'smiles'", 400
+        return {"error": "Missing required pkasolver parater 'smiles'"}, 400
     
     try:
         chart_data, species, pka_list = pkasolver.main(smiles)
@@ -48,7 +48,7 @@ def get_data():
         }
     except Exception as e:
         logging.error("pkasolver_flask exception: {}".format(e))
-        return "pkasolver internal error", 500
+        return {"error": "pkasolver internal error"}, 500
 
 
     # TODO: Format data for CTS here, or add formatting code on CTS backend?
