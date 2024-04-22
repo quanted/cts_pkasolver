@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 from rdkit import Chem
 from os import path
+import sys
 import pkasolver
 from pkasolver.query import calculate_microstate_pka_values
 
@@ -64,14 +65,16 @@ class CTSPkasolver:
 		lst=[]
 		depSmi=[]
 		proSmi=[]
+		idx=[]
 		
 		for j in range(len(protonation_states)):
 			state=protonation_states[j]
 			depSmi.append(Chem.MolToSmiles(state.deprotonated_mol))
 			proSmi.append(Chem.MolToSmiles(state.protonated_mol))
+			idx.append(state.reaction_center_idx)
 			lst.append(round(state.pka,2)) # get pka values for all sites for a given molecule store in a list
 
-		yield sites, lst, proSmi, depSmi
+		yield sites, lst, proSmi, depSmi, idx
 
 	def get_mono_plot(self, pka_list, proSmi, depSmi):
 		pka = pka_list[0]
@@ -342,11 +345,16 @@ class CTSPkasolver:
 
 		# Returns number of pka sites(n), list of pka values(p),
 		# and lists of protonated (pro) and deprotonated (dep) microspecies smiles:
-		for n, p, ps, ds in data:
+		for n, p, ps, ds, i in data:
 			pkaSites = n  # num of sites
 			pka_list = p  # list of pka values
 			pro = ps  # deprotonated_mol
 			dep = ds  # protonated_mol
+			idx = i
+
+		pka_dict = dict(zip(pka_list, idx))  # dict of atom index and pkas
+
+		logging.warning("SOLVER DICT: {}".format(pka_dict))
 
 		# Option to just return pKa list:
 		if data_type == "pka":
@@ -369,14 +377,19 @@ class CTSPkasolver:
 
 		reformatted_chart_data = self.format_chart_data(chart_data)
 
-		return reformatted_chart_data, species, pka_list
+		return reformatted_chart_data, species, pka_list, pka_dict
 
 
 if __name__ == "__main__":
 
 
 	# test_smiles = "CC(=O)OC1=CC=CC=C1C(O)=O"
-	test_smiles = "OC(=O)CC(O)(CC(O)=O)C(O)=O"
+	test_smiles = "NC(CC1=CN=CN1)C(O)=O "
+
+	if len(sys.argv) > 1:
+		test_smiles = sys.argv[1]
 
 	cts_pkasolver = CTSPkasolver()
 	chart_data, species, pka_list = cts_pkasolver.main(test_smiles)
+
+	print("Chart Data: {}\nSpecies: {}\nPka List: {}".format(chart_data, species, pka_list))

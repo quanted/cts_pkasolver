@@ -5,8 +5,8 @@ services:
   cts-pkasolver:
     image: ghcr.io/quanted/cts-pkasolver:main-9cfd6fd67e6de631772d580fc671e69573ba2526
     container_name: cts-pkasolver
-    # volumes:
-    #   - ../:/src
+    volumes:
+      - ../:/src
     expose:
       - "8080"
 

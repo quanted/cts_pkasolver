@@ -38,13 +38,14 @@ def get_data():
         return {"error": "Missing required pkasolver parater 'smiles'"}, 400
     
     try:
-        chart_data, species, pka_list = pkasolver.main(smiles)
+        chart_data, species, pka_list, pka_dict = pkasolver.main(smiles)
 
         results = {
             "status": True,
             "chart_data": chart_data,
             "species": species,
-            "pka_list": pka_list
+            "pka_list": pka_list,
+            "pka_dict": pka_dict
         }
     except Exception as e:
         logging.error("pkasolver_flask exception: {}".format(e))

@@ -14,7 +14,7 @@ RUN wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mamb
 RUN /bin/bash Mambaforge-Linux-x86_64.sh -b -p /opt/mamba
 RUN rm Mambaforge-Linux-x86_64.sh
 
-ENV PATH /opt/mamba/bin:$PATH
+ENV PATH /opt/mamba/:/opt/mamba/bin:$PATH
 
 COPY . /src
 
