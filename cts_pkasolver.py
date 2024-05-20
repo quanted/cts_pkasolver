@@ -352,9 +352,10 @@ class CTSPkasolver:
 			dep = ds  # protonated_mol
 			idx = i
 
-		pka_dict = dict(zip(pka_list, idx))  # dict of atom index and pkas
+		# pka_dict = dict(zip(pka_list, idx))  # dict of atom index and pkas
+		pka_dict = dict(zip(idx, pka_list))  # dict of atom index and pkas
 
-		logging.warning("SOLVER DICT: {}".format(pka_dict))
+		# logging.warning("SOLVER DICT: {}".format(pka_dict))
 
 		# Option to just return pKa list:
 		if data_type == "pka":
