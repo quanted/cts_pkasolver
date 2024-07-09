@@ -353,7 +353,15 @@ class CTSPkasolver:
 			idx = i
 
 		# pka_dict = dict(zip(pka_list, idx))  # dict of atom index and pkas
-		pka_dict = dict(zip(idx, pka_list))  # dict of atom index and pkas
+		# pka_dict = dict(zip(idx, pka_list))  # dict of atom index and pkas
+
+		pka_dict = {}
+		for key, value in zip(idx, pka_list):
+		    if key in pka_dict:
+		        pka_dict[key].append(value)
+		    else:
+		        pka_dict[key] = [value]
+
 
 		# logging.warning("SOLVER DICT: {}".format(pka_dict))
 
