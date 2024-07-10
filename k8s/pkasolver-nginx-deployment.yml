@@ -18,7 +18,7 @@ spec:
         app: cts-pkasolver-nginx
     spec:
       containers:
-        - image: ghcr.io/quanted/cts-pkasolver-nginx:main-8a82104cbfd3bf39f07cb51085997973b624fdf6
+        - image: ghcr.io/quanted/cts-pkasolver-nginx:main-f56e52d0c428e78062f6f6bca2f3cca6347cefcf
           imagePullPolicy: Always
           name: cts-pkasolver-nginx
           readinessProbe:

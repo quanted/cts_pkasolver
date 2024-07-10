@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: cts-pkasolver
-        image: ghcr.io/quanted/cts-pkasolver:dev-465cc3f659ee4236eb1fabb6b78d36df95bdc3ea
+        image: ghcr.io/quanted/cts-pkasolver:dev-f56e52d0c428e78062f6f6bca2f3cca6347cefcf
         imagePullPolicy: Always
         livenessProbe:
           exec:
