@@ -357,13 +357,13 @@ class CTSPkasolver:
 
 		pka_dict = {}
 		for key, value in zip(idx, pka_list):
-		    if key in pka_dict:
-		        pka_dict[key].append(value)
-		    else:
-		        pka_dict[key] = [value]
+			if key in pka_dict:
+				pka_dict[key].append(value)
+			else:
+				pka_dict[key] = [value]
 
-
-		# logging.warning("SOLVER DICT: {}".format(pka_dict))
+		for key, val in pka_dict.items():
+			pka_dict[key] = ', '.join(map(str, val))
 
 		# Option to just return pKa list:
 		if data_type == "pka":
