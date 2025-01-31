@@ -365,6 +365,8 @@ class CTSPkasolver:
 		for key, val in pka_dict.items():
 			pka_dict[key] = ', '.join(map(str, val))
 
+		pkasolver_dict = dict(zip(pka_list, idx))
+
 		# Option to just return pKa list:
 		if data_type == "pka":
 			return pka_list
@@ -386,7 +388,7 @@ class CTSPkasolver:
 
 		reformatted_chart_data = self.format_chart_data(chart_data)
 
-		return reformatted_chart_data, species, pka_list, pka_dict
+		return reformatted_chart_data, species, pka_list, pka_dict, pkasolver_dict
 
 
 if __name__ == "__main__":
