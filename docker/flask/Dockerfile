@@ -1,5 +1,5 @@
 # FROM ubuntu:latest
-FROM ubuntu:mantic
+FROM ubuntu:latest
 
 # TODO: More build libraries needed (see cyan-waterbody)?
 RUN apt-get update && \
@@ -10,9 +10,9 @@ RUN apt-get update && \
 		build-essential
 
 # Manual installation of Mamba:
-RUN wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh"
-RUN /bin/bash Mambaforge-Linux-x86_64.sh -b -p /opt/mamba
-RUN rm Mambaforge-Linux-x86_64.sh
+RUN wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
+RUN /bin/bash Miniforge3-Linux-x86_64.sh -b -p /opt/mamba
+RUN rm Miniforge3-Linux-x86_64.sh
 
 ENV PATH /opt/mamba/:/opt/mamba/bin:$PATH
 
