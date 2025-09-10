@@ -34,6 +34,13 @@ RUN mamba env update -n $CONDA_ENV --file /src/environment.yml
 
 RUN cd /src/pkasolver && \
 	conda run --no-capture-output -n $CONDA_ENV python setup.py install
+ 
+RUN find /opt/mamba -name "*test.key" -delete || true
+RUN find /opt/mamba/ -name 'test.key' -delete || true
+RUN find /opt/mamba/ -name 'localhost.key' -delete || true
+RUN find /opt/mamba/ -name 'server.pem' -delete || true
+RUN find /opt/mamba/ -name 'client.pem' -delete || true
+RUN find /opt/mamba/ -name 'password_protected.pem' -delete || true
 
 WORKDIR /src
 
